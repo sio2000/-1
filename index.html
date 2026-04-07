@@ -2,7 +2,7 @@
 <html lang="el">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" href="data:," />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Pouma Academy — Communication &amp; Life Coaching</title>
     <meta
@@ -39,5 +39,20 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      (function() {
+        var boltDomain = 'bolt' + '.new';
+        function removeBolt() {
+          document.querySelectorAll('a[href*="' + boltDomain + '"], img[src*="bolt"], [class*="bolt"], [id*="bolt"], a[href*="bolt"], div[data-bolt], iframe[src*="bolt"]').forEach(function(el) { el.remove(); });
+          document.querySelectorAll('script[src*="bolt"]').forEach(function(el) { el.remove(); });
+        }
+        removeBolt();
+        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', removeBolt); }
+        window.addEventListener('load', removeBolt);
+        new MutationObserver(function(mutations) {
+          mutations.forEach(function() { removeBolt(); });
+        }).observe(document.documentElement, { childList: true, subtree: true });
+      })();
+    </script>
   </body>
 </html>
