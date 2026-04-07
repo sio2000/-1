@@ -1,3 +1,18 @@
-# englishwebsite
+# The Pouma Academy — Website
 
-[![Open in Bolt](https://bolt.new/static/open-in-bolt.svg)](https://bolt.new/~/sb1-4yvfqgah)
+Ιστότοπος για την **Pouma Academy** (Communication & Life Coaching).
+
+## Τοπική ανάπτυξη
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+Το production build βγαίνει στο φάκελο `dist/`.
