@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu, X, Zap } from 'lucide-react';
 
 interface NavigationProps {
@@ -8,6 +8,13 @@ interface NavigationProps {
 
 export default function Navigation({ currentPage, onNavigate }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const menuItems = [
     { label: 'Αρχική', id: 'home' },
@@ -23,8 +30,17 @@ export default function Navigation({ currentPage, onNavigate }: NavigationProps)
     setIsOpen(false);
   };
 
+  const isHome = currentPage === 'home';
+  const showSolid = !isHome || scrolled || isOpen;
+
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        showSolid
+          ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm'
+          : 'bg-transparent'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div
@@ -35,7 +51,9 @@ export default function Navigation({ currentPage, onNavigate }: NavigationProps)
               <Zap className="w-6 h-6 text-white" />
             </div>
             <div className="hidden sm:block">
-              <p className="font-bold text-gray-900 text-base leading-none">Pouma Academy</p>
+              <p className={`font-bold text-base leading-none ${showSolid ? 'text-gray-900' : 'text-gray-800'}`}>
+                Pouma Academy
+              </p>
               <p className="text-xs text-amber-600 font-medium">Communication & Life</p>
             </div>
           </div>
@@ -48,7 +66,9 @@ export default function Navigation({ currentPage, onNavigate }: NavigationProps)
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                   currentPage === item.id
                     ? 'text-amber-700 bg-amber-50'
-                    : 'text-gray-600 hover:text-amber-700 hover:bg-gray-50'
+                    : showSolid
+                      ? 'text-gray-600 hover:text-amber-700 hover:bg-gray-50'
+                      : 'text-gray-700 hover:text-amber-700 hover:bg-white/60'
                 }`}
               >
                 {item.label}
@@ -72,13 +92,13 @@ export default function Navigation({ currentPage, onNavigate }: NavigationProps)
             {isOpen ? (
               <X className="w-6 h-6 text-gray-900" />
             ) : (
-              <Menu className="w-6 h-6 text-gray-900" />
+              <Menu className={`w-6 h-6 ${showSolid ? 'text-gray-900' : 'text-gray-800'}`} />
             )}
           </button>
         </div>
 
         {isOpen && (
-          <div className="md:hidden border-t border-gray-100 py-4 space-y-2">
+          <div className="md:hidden border-t border-gray-100 py-4 space-y-2 bg-white rounded-b-2xl">
             {menuItems.map((item) => (
               <button
                 key={item.id}
